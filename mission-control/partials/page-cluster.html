@@ -1,0 +1,230 @@
+<div class="page" id="page-cluster">
+
+  <!-- ENLISTMENT GUIDE — collapsible -->
+  <div class="panel" style="margin-bottom:1px" id="guide-panel">
+    <div class="panel-head" onclick="toggleGuide()" style="cursor:pointer;user-select:none">
+      <div class="panel-title">ENLISTMENT GUIDE</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="f-mono c-text3" style="font-size:10px">HOW TO ADD A NEW NODE</span>
+        <span id="guide-toggle" style="font-family:var(--mono);font-size:11px;color:var(--text3);transition:transform .2s;display:inline-block">▼</span>
+      </div>
+    </div>
+    <div id="guide-body">
+      <div class="panel-body" style="padding:16px">
+
+        <!-- Steps -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-bottom:14px">
+
+          <div class="guide-step">
+            <div class="guide-step-num">01</div>
+            <div class="guide-step-title">CREATE VPS</div>
+            <div class="guide-step-body">
+              Create a new VPS on Hetzner (or any provider).<br><br>
+              Recommended: <strong>CX22</strong> — Ubuntu 22.04, 2 vCPU, 4GB RAM.<br><br>
+              Note the <strong>public IP</strong> and <strong>root password</strong> from the provider panel.
+            </div>
+          </div>
+
+          <div class="guide-step">
+            <div class="guide-step-num">02</div>
+            <div class="guide-step-title">FILL THE FORM</div>
+            <div class="guide-step-body">
+              Click <strong>ENLIST NODE</strong> below and fill in:<br><br>
+              • <strong>Node ID</strong> — unique name (e.g. <code>hetzner4</code>)<br>
+              • <strong>IP</strong> — public IP from step 01<br>
+              • <strong>SSH user</strong> — <code>root</code><br>
+              • <strong>SSH password</strong> — root password from provider<br>
+              • <strong>DB role</strong> — Master or Replica<br>
+              • <strong>DB host</strong> — master's Tailscale IP (replicas only)
+            </div>
+          </div>
+
+          <div class="guide-step">
+            <div class="guide-step-num">03</div>
+            <div class="guide-step-title">PROVISION &amp; AUTHORISE</div>
+            <div class="guide-step-body">
+              Click <strong>PROVISION &amp; ENLIST</strong> and watch the progress.<br><br>
+              When the <strong>Tailscale</strong> step appears, a URL will be shown. Open it in your browser to authorise the node on your Tailscale network.<br><br>
+              Provisioning resumes automatically. All 11 steps complete in ~3 minutes.<br><br>
+              After enlisting, configure <strong>etcd + Patroni</strong> for automatic DB failover via the Replication page.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- What gets automated -->
+        <div style="border:1px solid var(--border);padding:10px 14px;margin-bottom:12px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.15em;color:var(--text3);text-transform:uppercase;margin-bottom:8px">WHAT IS AUTOMATED</div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:4px 24px;font-size:10px;color:var(--text2)">
+            <div>✓ SSH key deployment</div>
+            <div>✓ Build dependencies (g++, libpqxx)</div>
+            <div>✓ Tailscale installation</div>
+            <div>✓ C++ app compilation</div>
+            <div>✓ systemd service setup</div>
+            <div>✓ PostgreSQL install &amp; configuration</div>
+            <div>✓ Replication setup (master or replica)</div>
+            <div>✓ Nginx upstream update</div>
+            <div>✓ Keepalived LB failover (Hetzner 1 ↔ 2)</div>
+            <div>✓ Health check 503 on DB failure</div>
+            <div>✓ Health check verification</div>
+            <div>✓ Node registration</div>
+          </div>
+        </div>
+
+        <!-- DB role guide -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px">
+          <div style="background:var(--bg3);border:1px solid var(--border);padding:10px 12px">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.15em;color:var(--amber);text-transform:uppercase;margin-bottom:6px">DB ROLE: MASTER</div>
+            <div style="font-size:10px;color:var(--text2);line-height:1.7">
+              Sets up PostgreSQL with WAL replication enabled.<br>
+              Creates <code>appuser</code> and <code>appdb</code>.<br>
+              Opens port 5432 on Tailscale interface.<br>
+              <span style="color:var(--text3)">DB host: leave blank</span>
+            </div>
+          </div>
+          <div style="background:var(--bg3);border:1px solid var(--border);padding:10px 12px">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.15em;color:var(--text3);text-transform:uppercase;margin-bottom:6px">DB ROLE: REPLICA</div>
+            <div style="font-size:10px;color:var(--text2);line-height:1.7">
+              Takes a base backup from master.<br>
+              Streams WAL automatically.<br>
+              Read-only — serves <code>/data</code> reads.<br>
+              <span style="color:var(--amber)">DB host: master's Tailscale IP</span>
+            </div>
+          </div>
+          <div style="background:var(--bg3);border:1px solid var(--border);padding:10px 12px">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.15em;color:var(--text3);text-transform:uppercase;margin-bottom:6px">DB ROLE: NONE</div>
+            <div style="font-size:10px;color:var(--text2);line-height:1.7">
+              App-only node — no PostgreSQL.<br>
+              Only runs the C++ HTTP server.<br>
+              Useful for pure compute/LB nodes.<br>
+              <span style="color:var(--text3)">DB host: not required</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- NODE ROSTER -->
+  <div class="panel" style="margin-bottom:1px">
+    <div class="panel-head">
+      <div class="panel-title">NODE ROSTER</div>
+      <div style="display:flex;gap:4px;align-items:center">
+        <span class="f-mono c-text3" style="font-size:10px;letter-spacing:.08em" id="cluster-summary">—</span>
+        <button class="btn btn-ghost btn-sm" onclick="refreshClusterPage()">REFRESH</button>
+        <button class="btn btn-primary btn-sm" onclick="showAddNodeForm()">+ ENLIST NODE</button>
+      </div>
+    </div>
+    <div id="cluster-roster"></div>
+  </div>
+
+  <!-- ADD / EDIT NODE FORM -->
+  <div class="panel" id="add-node-panel" style="display:none;margin-bottom:1px">
+    <div class="panel-head">
+      <div class="panel-title" id="add-node-title">ENLIST NEW NODE</div>
+      <button class="btn btn-ghost btn-sm" onclick="hideAddNodeForm()">CANCEL</button>
+    </div>
+    <div class="panel-body">
+
+      <!-- Section: Identity -->
+      <div class="form-section">
+        <div class="form-section-label">IDENTITY</div>
+        <div class="form-row-3">
+          <div class="field"><label>Node ID</label><input id="an-name" type="text" placeholder="server2" autocomplete="off" oninput="validateField('an-name')" onblur="validateField('an-name')"><span class="field-msg" id="msg-an-name"></span></div>
+          <div class="field"><label>Display label</label><input id="an-label" type="text" placeholder="Hetzner CX21" autocomplete="off" oninput="validateField('an-label')"><span class="field-msg" id="msg-an-label"></span></div>
+          <div class="field"><label>IP address</label><input id="an-ip" type="text" placeholder="100.x.x.x" autocomplete="off" oninput="validateField('an-ip')" onblur="validateField('an-ip')"><span class="field-msg" id="msg-an-ip"></span></div>
+        </div>
+      </div>
+
+      <!-- Section: SSH Access -->
+      <div class="form-section">
+        <div class="form-section-label">SSH ACCESS</div>
+        <div class="form-row-4">
+          <div class="field"><label>SSH host <span class="c-text3">(blank = IP)</span></label><input id="an-sshhost" type="text" placeholder="leave blank" autocomplete="off"></div>
+          <div class="field"><label>SSH port</label><input id="an-sshport" type="number" value="22"></div>
+          <div class="field"><label>SSH user</label><input id="an-sshuser" type="text" placeholder="root" autocomplete="off" oninput="validateField('an-sshuser')"><span class="field-msg" id="msg-an-sshuser"></span></div>
+          <div class="field"><label>SSH password <span class="c-text3">(first-time only)</span></label><input id="an-sshpass" type="password" placeholder="blank if key installed" autocomplete="off" oninput="validateField('an-sshpass')"><span class="field-msg" id="msg-an-sshpass"></span></div>
+        </div>
+        <div style="font-size:10px;color:var(--text3);margin-top:6px;letter-spacing:.04em">
+          Key auth is tried first. Password is used once to deploy the HA SSH key, then discarded.
+        </div>
+      </div>
+
+      <!-- Section: Role -->
+      <div class="form-section">
+        <div class="form-section-label">ASSIGNMENT</div>
+        <div class="form-row-4">
+          <div class="field"><label>App port</label><input id="an-appport" type="number" value="8080"></div>
+          <div class="field"><label>Node role</label>
+            <select id="an-role">
+              <option value="app">App server</option>
+              <option value="load-balancer">Load balancer</option>
+              <option value="app+lb">App + LB</option>
+            </select>
+          </div>
+          <div class="field"><label>DB role</label>
+            <select id="an-db" onchange="onDbRoleChange()">
+              <option value="replica">Replica</option>
+              <option value="master">Master</option>
+              <option value="none">None</option>
+            </select>
+          </div>
+          <div class="field"><label>Service manager</label>
+            <select id="an-service">
+              <option value="systemd">systemd (Linux)</option>
+              <option value="launchctl">launchctl (macOS)</option>
+              <option value="docker">Docker</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Database -->
+      <div class="form-section">
+        <div class="form-section-label">DATABASE CONNECTION</div>
+        <div class="form-row-4">
+          <div class="field field-span2"><label>DB host <span class="c-text3">(Tailscale IP of master node, blank = localhost)</span></label><input id="an-dbhost" type="text" placeholder="100.x.x.x or leave blank for master node" autocomplete="off" oninput="validateField('an-dbhost')" onblur="validateField('an-dbhost')"><span class="field-msg" id="msg-an-dbhost"></span></div>
+          <div class="field field-span2"><label>DB password <span class="c-text3">(appuser password)</span></label><input id="an-dbpass" type="password" placeholder="secure-password-here" autocomplete="off"></div>
+        </div>
+        <div style="font-size:10px;color:var(--text3);margin-top:6px;letter-spacing:.04em">
+          Leave DB host blank if this node IS the master. Set to the master's Tailscale IP for replica/app nodes.
+        </div>
+      </div>
+
+      <!-- Form error banner -->
+      <div class="form-error-banner" id="form-error-banner"></div>
+
+      <!-- Actions -->
+      <div style="display:flex;gap:6px;padding-top:4px">
+        <button class="btn btn-primary" onclick="provisionNode()">PROVISION &amp; ENLIST</button>
+        <button class="btn btn-ghost" onclick="addNodeManual()">REGISTER WITHOUT PROVISIONING</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROVISIONING PROGRESS -->
+  <div class="panel" id="provision-panel" style="display:none;margin-bottom:1px">
+    <div class="panel-head">
+      <div class="panel-title">PROVISIONING — <span id="provision-node-name" style="color:var(--amber)"></span></div>
+      <div id="prov-overall" style="font-size:10px;color:var(--text3);letter-spacing:.08em">INITIALIZING...</div>
+    </div>
+    <div class="panel-body">
+      <!-- Progress bar -->
+      <div class="prov-progress-wrap" style="margin-bottom:14px">
+        <div class="prov-progress-bar">
+          <div class="prov-progress-fill" id="prov-progress-fill" style="width:0%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px">
+          <span style="font-size:9px;color:var(--text3)" id="prov-step-label">STEP 0 / 9</span>
+          <span style="font-size:9px;color:var(--text3)" id="prov-elapsed">0s</span>
+        </div>
+      </div>
+      <!-- Steps -->
+      <div id="provision-steps" style="display:flex;flex-direction:column;gap:2px;margin-bottom:12px"></div>
+      <!-- Result -->
+      <div id="provision-result" style="display:none;padding:10px 12px;font-size:11px;letter-spacing:.04em;border:1px solid"></div>
+    </div>
+  </div>
+
+</div>

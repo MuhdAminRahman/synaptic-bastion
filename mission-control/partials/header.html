@@ -1,0 +1,39 @@
+<header>
+  <button class="hamburger-btn" id="hamburger-btn" onclick="toggleSidebar()" aria-label="Toggle navigation">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="logo">
+    <div class="logo-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="9" stroke="var(--text)" stroke-width="1" fill="none" opacity=".6"/>
+        <circle cx="12" cy="12" r="6" stroke="var(--text)" stroke-width="1.2" fill="none"/>
+        <circle cx="12" cy="12" r="2.5" fill="var(--text)"/>
+        <rect x="11" y="1" width="2" height="3" fill="var(--text)" opacity=".8"/>
+        <rect x="11" y="20" width="2" height="3" fill="var(--text)" opacity=".8"/>
+        <rect x="1" y="11" width="3" height="2" fill="var(--text)" opacity=".8"/>
+        <rect x="20" y="11" width="3" height="2" fill="var(--text)" opacity=".8"/>
+        <rect x="3.5" y="3.5" width="2" height="3" fill="var(--text)" transform="rotate(45 4.5 5)" opacity=".6"/>
+        <rect x="18.5" y="18.5" width="2" height="3" fill="var(--text)" transform="rotate(45 19.5 20)" opacity=".6"/>
+        <rect x="18.5" y="3.5" width="2" height="3" fill="var(--text)" transform="rotate(-45 19.5 5)" opacity=".6"/>
+        <rect x="3.5" y="18.5" width="2" height="3" fill="var(--text)" transform="rotate(-45 4.5 20)" opacity=".6"/>
+      </svg>
+    </div>
+    <div>
+      <div class="logo-name">SYNAPTIC BASTION</div>
+      <div class="logo-version">HIGH AVAILABILITY MISSION CONTROL</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="header-conn hidden" id="header-conn">
+      <span class="blink" style="font-size:10px">■</span>
+      <span id="conn-label" class="conn-label-full"></span>
+      <span id="conn-label-short" class="conn-label-short"></span>
+      <button class="btn btn-ghost btn-sm" onclick="pollNow()">poll</button>
+      <button class="btn btn-ghost btn-sm" onclick="disconnect()">disconnect</button>
+    </div>
+    <div class="clock" id="clock" title="Keyboard: 1-7 nav · R refresh · E export">--:--:-- UTC</div>
+    <div class="sys-badge badge-off" id="sys-badge" role="status" aria-live="polite" aria-label="System status">
+      <span>■</span><span id="sys-text">OFFLINE</span>
+    </div>
+  </div>
+</header>

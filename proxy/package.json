@@ -1,0 +1,14 @@
+{
+  "name": "synaptic-bastion-proxy",
+  "version": "4.0.0",
+  "description": "HA cluster management API — provisioning, chaos testing, Patroni, Outpost",
+  "main": "index.js",
+  "scripts": { "start": "node index.js" },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.0",
+    "node-ssh": "^13.1.0"
+  },
+  "engines": { "node": ">=18.0.0" }
+}

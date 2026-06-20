@@ -1,0 +1,43 @@
+<div class="connect-overlay" id="setup-card">
+  <div class="connect-box">
+    <button class="connect-settings-btn" onclick="openSettings()" title="Settings" aria-label="Settings">⚙</button>
+    <div class="connect-logo">
+      <svg width="52" height="52" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="10" stroke="var(--text)" stroke-width=".8" fill="none" opacity=".4"/>
+        <circle cx="12" cy="12" r="7" stroke="var(--text)" stroke-width="1.2" fill="none" opacity=".8"/>
+        <circle cx="12" cy="12" r="3" fill="var(--text)"/>
+        <circle cx="12" cy="12" r="5" stroke="var(--text)" stroke-width=".6" fill="none" opacity=".5"/>
+        <rect x="11.2" y="1" width="1.6" height="3.5" fill="var(--text)"/>
+        <rect x="11.2" y="19.5" width="1.6" height="3.5" fill="var(--text)"/>
+        <rect x="1" y="11.2" width="3.5" height="1.6" fill="var(--text)"/>
+        <rect x="19.5" y="11.2" width="3.5" height="1.6" fill="var(--text)"/>
+        <rect x="4" y="4" width="1.6" height="3" fill="var(--text)" transform="rotate(45 4 4)"/>
+        <rect x="20" y="4" width="1.6" height="3" fill="var(--text)" transform="rotate(-45 20 4)"/>
+        <rect x="4" y="20" width="1.6" height="3" fill="var(--text)" transform="rotate(-45 4 20)"/>
+        <rect x="20" y="20" width="1.6" height="3" fill="var(--text)" transform="rotate(45 20 20)"/>
+      </svg>
+    </div>
+    <div class="connect-title cursor">SYNAPTIC BASTION</div>
+    <div class="connect-sub">HA MISSION CONTROL — CHAPTER TACTICAL NETWORK</div>
+    <div style="width:100%;font-size:10px;color:var(--text3);margin-bottom:16px;line-height:1.8;letter-spacing:.04em;border:1px solid var(--border);padding:10px 12px;background:var(--bg)">
+      <div>HIGH AVAILABILITY MISSION CONTROL · MUHAMMAD AMIN BIN ABD RAHMAN</div>
+      <div>CHAPTER COMMAND INTERFACE v6.0 // CLEARANCE REQUIRED</div>
+      <div style="margin-top:4px">-INITIALIZING CLUSTER INTERFACE-</div>
+      <div id="boot-status" style="color:var(--text)">AWAITING CHAPTER RELAY ADDRESS...</div>
+    </div>
+    <div class="connect-form">
+      <div class="field" style="width:100%">
+        <label>Hetzner Public IP</label>
+        <input id="cfg-ip" type="text" placeholder="1.2.3.4" autocomplete="off"
+          onkeydown="if(event.key==='Enter')connect()"
+          style="font-size:16px;padding:14px 16px;text-align:center;letter-spacing:.05em">
+      </div>
+      <button class="btn btn-primary connect-cta" id="connect-btn" onclick="connect()" aria-label="Connect to proxy">
+        <span class="connect-btn-text">ENTER THE NETWORK</span>
+        <span class="connect-btn-loading" style="display:none">CONNECTING...</span>
+      </button>
+    </div>
+    <div class="connect-error" id="connect-error"></div>
+    <div class="connect-hint">FLOATING IP 116.203.166.135 · PORT 8090 · HA ENTRY POINT</div>
+  </div>
+</div>

@@ -1,0 +1,81 @@
+<section class="page active" id="page-monitor">
+
+  <div class="stat-row">
+    <div class="stat" id="stat-cluster">
+      <div class="stat-label">Cluster health</div>
+      <div class="stat-value sv-muted" id="s-online">—</div>
+      <div class="stat-sub" id="s-online-sub">of — nodes online</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Avg latency</div>
+      <div class="stat-value sv-muted" id="s-lat">—</div>
+      <div class="stat-sub" id="s-lat-sub">last poll</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">DB replicas</div>
+      <div class="stat-value sv-muted" id="s-replicas">—</div>
+      <div class="stat-sub">streaming WAL</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Patroni leader</div>
+      <div class="stat-value sv-muted" id="s-patroni-leader">—</div>
+      <div class="stat-sub" id="s-patroni-tl">timeline —</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Poll requests</div>
+      <div class="stat-value sv-muted" id="s-reqs">—</div>
+      <div class="stat-sub" id="s-rate">— success rate</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Next poll</div>
+      <div class="stat-value sv-muted" id="s-countdown">—</div>
+      <div class="stat-sub" id="s-last-poll">never polled</div>
+    </div>
+  </div>
+
+  <div class="nodes-grid" id="nodes-grid">
+    <div style="font-family:var(--mono);font-size:12px;color:var(--text3);padding:20px;grid-column:1/-1">Connecting to cluster...</div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">NODE LATENCY — 5 MIN WINDOW</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span style="font-family:var(--mono);font-size:10px;color:var(--text3)" id="chart-legend"></span>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="chart-wrap"><canvas id="latChart" role="img" aria-label="Latency chart"></canvas></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">EVENT LOG</div>
+        <div style="display:flex;align-items:center;gap:6px"><span class="f-mono c-text3" style="font-size:9px" id="last-poll-time">—</span><button class="btn btn-ghost btn-sm" onclick="clearLog()">CLEAR</button></div>
+      </div>
+      <div class="panel-body">
+        <div class="log-wrap" id="log-list" role="log" aria-label="Event log" aria-live="polite">
+          <div class="log-entry info"><span class="log-ts">&gt;&gt;</span><span>SYSTEM READY. AWAITING PROXY CONNECTION.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nginx log tail — collapsed by default -->
+  <div class="panel" style="margin-top:14px" id="nginx-log-panel">
+    <div class="panel-head" onclick="toggleNginxLog()" style="cursor:pointer;user-select:none">
+      <div class="panel-title">Nginx access log <span class="f-mono f-10 c-text3">last 30 app requests through LB</span></div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();fetchNginxLog()">refresh</button>
+        <span id="nginx-log-toggle" style="font-family:var(--mono);font-size:12px;color:var(--text3);transition:transform .2s;display:inline-block">▼</span>
+      </div>
+    </div>
+    <div id="nginx-log-body" style="display:none">
+      <div id="nginx-log-wrap" style="max-height:200px;overflow-y:auto;font-family:var(--mono);font-size:11px">
+        <div style="padding:14px;color:var(--text3)">Click refresh to load.</div>
+      </div>
+    </div>
+  </div>
+
+</section>

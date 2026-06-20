@@ -1,0 +1,91 @@
+<section class="page" id="page-tests">
+
+  <!-- SPEC TARGETS -->
+  <div class="two-col" style="margin-bottom:1px;gap:1px">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">RELIABILITY TARGETS</div></div>
+      <table class="rtable" style="width:100%">
+        <thead><tr><th>METRIC</th><th>TARGET</th><th>RESULT</th><th style="width:60px">TIME</th></tr></thead>
+        <tbody>
+          <tr><td>System Uptime</td><td class="t-dim">&ge;99%</td><td id="tr-uptime" >—</td><td id="tt-uptime" class="t-muted" style="font-size:9px">—</td></tr>
+          <tr><td>RTO</td><td class="t-dim">&lt;5s</td><td id="tr-rto" >—</td><td id="tt-rto" class="t-muted" style="font-size:9px">—</td></tr>
+          <tr><td>RPO</td><td class="t-dim">0s</td><td id="tr-rpo" >—</td><td id="tt-rpo" class="t-muted" style="font-size:9px">—</td></tr>
+          <tr><td>DB Failover</td><td class="t-dim">&lt;30s (Patroni)</td><td id="tr-dbfailover">—</td><td id="tt-dbfailover" class="t-muted" style="font-size:9px">—</td></tr>
+          <tr><td>Failure Detection</td><td class="t-dim">&le;5s</td><td id="tr-detect" >—</td><td id="tt-detect" class="t-muted" style="font-size:9px">—</td></tr>
+          <tr><td>Auto-Recovery</td><td class="t-dim">100%</td><td id="tr-recovery" >—</td><td id="tt-recovery" class="t-muted" style="font-size:9px">—</td></tr>
+          <tr><td>DB Replicas</td><td class="t-dim">&ge;2</td><td id="tr-replicas" >—</td><td id="tt-replicas" class="t-muted" style="font-size:9px">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">PERFORMANCE TARGETS</div></div>
+      <table class="rtable" style="width:100%">
+        <thead><tr><th>METRIC</th><th>TARGET</th><th>RESULT</th><th style="width:60px">TIME</th></tr></thead>
+        <tbody>
+          <tr><td>Latency p50</td><td class="t-dim">&le;180ms</td><td id="tr-p50" >—</td><td id="tt-p50" class="t-muted" style="font-size:9px">—</td></tr>
+          <tr><td>Latency p95</td><td class="t-dim">&le;250ms</td><td id="tr-p95" >—</td><td id="tt-p95" class="t-muted" style="font-size:9px">—</td></tr>
+          <tr><td>Throughput</td><td class="t-dim">&ge;1000 req/s</td><td id="tr-rps" >—</td><td id="tt-rps" class="t-muted" style="font-size:9px">—</td></tr>
+          <tr><td>Replication Lag</td><td class="t-dim">&lt;50ms</td><td id="tr-lag" >—</td><td id="tt-lag" class="t-muted" style="font-size:9px">—</td></tr>
+          <tr><td>Lag (peak)</td><td class="t-dim">&lt;100ms</td><td id="tr-lag-peak" >—</td><td id="tt-lag-peak" class="t-muted" style="font-size:9px">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TEST SUITE PANEL -->
+  <div class="panel" style="margin-bottom:1px">
+    <div class="panel-head">
+      <div class="panel-title">PHASE 6 — FAILOVER &amp; VALIDATION</div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center">
+        <span class="f-mono c-text3" style="font-size:10px;letter-spacing:.08em" id="test-summary">TESTS PENDING</span>
+        <button class="btn btn-ghost btn-sm" onclick="exportResults()">EXPORT</button>
+        <button class="btn btn-ghost btn-sm" onclick="resetTests()">RESET</button>
+        <button class="btn btn-ghost btn-sm" onclick="openAllNodeHealth()">OPEN ALL ↗</button>
+        <button class="btn btn-primary btn-sm" onclick="runAllTests()">RUN ALL ▶</button>
+      </div>
+    </div>
+    <div id="test-grid"></div>
+  </div>
+
+  <!-- EVIDENCE + PROBE (side by side) -->
+  <div class="two-col" style="gap:1px">
+    <div class="panel">
+      <div class="panel-head" onclick="toggleEvidence()" style="cursor:pointer;user-select:none">
+        <div class="panel-title">EVIDENCE LOG <span class="ev-badge-count" id="ev-count" style="display:none">0</span></div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();expandAllEvidence()">EXPAND</button>
+          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();clearEvidence()">CLEAR</button>
+          <span id="ev-toggle" style="font-family:var(--mono);font-size:11px;color:var(--text3);transition:transform .15s;display:inline-block">▼</span>
+        </div>
+      </div>
+      <div id="ev-body-wrap">
+        <div style="padding:10px 14px;max-height:320px;overflow-y:auto">
+          <div class="ev-wrap" id="evidence-list">
+            <div class="empty-state">NO EVIDENCE — RUN TESTS TO POPULATE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">MANUAL PROBE</div>
+      </div>
+      <div class="panel-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-bottom:10px;align-items:end">
+          <div class="field">
+            <label>Node</label>
+            <select id="probe-node"></select>
+          </div>
+          <div class="field">
+            <label>Path</label>
+            <input id="probe-path" type="text" value="/health">
+          </div>
+          <button class="btn btn-primary btn-sm" style="align-self:end" onclick="manualProbe()">SEND</button>
+        </div>
+        <div class="probe-out" id="probe-out">AWAITING INPUT</div>
+      </div>
+    </div>
+  </div>
+
+</section>

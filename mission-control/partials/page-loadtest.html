@@ -1,0 +1,47 @@
+<div class="page" id="page-loadtest">
+  <div class="two-col" style="margin-bottom:14px">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">Configuration</div></div>
+      <div class="panel-body">
+        <div class="three-col" style="margin-bottom:14px">
+          <div class="field"><label>Requests (n)</label><input type="number" id="lt-n" value="100" min="10"></div>
+          <div class="field"><label>Concurrency (c)</label><input type="number" id="lt-c" value="10" min="1"></div>
+          <div class="field"><label>Endpoint</label><input type="text" id="lt-path" value="/health"></div>
+        </div>
+        <button class="btn btn-primary" id="lt-btn" onclick="runLoadTest()">Run load test →</button>
+        <div class="load-bar"><div class="load-fill" id="lt-fill"></div></div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-top:10px" id="lt-status">Runs server-side via proxy — accurate results.</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">Results</div></div>
+      <div class="panel-body">
+        <div class="three-col" style="gap:8px;margin-bottom:14px">
+          <div class="nm"><div class="nm-label">Total</div><div class="nm-val blue" id="lt-total">—</div></div>
+          <div class="nm"><div class="nm-label">Success</div><div class="nm-val good" id="lt-ok">—</div></div>
+          <div class="nm"><div class="nm-label">Failed</div><div class="nm-val bad" id="lt-fail">—</div></div>
+          <div class="nm"><div class="nm-label">Rate</div><div class="nm-val" id="lt-pct">—</div></div>
+          <div class="nm"><div class="nm-label">Avg ms</div><div class="nm-val blue" id="lt-avg">—</div></div>
+          <div class="nm"><div class="nm-label">Req/sec</div><div class="nm-val cyan" id="lt-rps">—</div></div>
+        </div>
+        <table class="rtable" id="lt-ptable" style="display:none">
+          <thead><tr><th>Metric</th><th>Value</th><th>Target</th><th>Pass</th></tr></thead>
+          <tbody>
+            <tr><td>P50</td><td id="lt-p50">—</td><td>≤180ms</td><td id="lt-p50-pass">—</td></tr>
+            <tr><td>P95</td><td id="lt-p95">—</td><td>≤250ms</td><td id="lt-p95-pass">—</td></tr>
+            <tr><td>P99</td><td id="lt-p99">—</td><td>—</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-title">Benchmark history</div></div>
+    <div class="panel-body bench-scroll">
+      <table class="rtable">
+        <thead><tr><th>Time</th><th>n</th><th>c</th><th>Path</th><th>Success%</th><th>Avg ms</th><th>P50</th><th>P95</th><th>P99</th><th>Req/sec</th></tr></thead>
+        <tbody id="bench-body"><tr><td colspan="10" style="color:var(--text3)">No runs yet.</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>

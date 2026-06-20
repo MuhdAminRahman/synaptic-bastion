@@ -1,0 +1,35 @@
+global_defs {
+  router_id hetzner2
+  script_user root
+  enable_script_security
+}
+
+vrrp_script chk_app {
+  script "/usr/bin/systemctl is-active ha-app"
+  interval 2
+  weight -20
+}
+
+vrrp_instance VI_1 {
+  state BACKUP
+  interface eth0
+  virtual_router_id 51
+  priority 100
+  advert_int 1
+
+  authentication {
+    auth_type PASS
+    auth_pass CHANGE_ME
+  }
+
+  unicast_src_ip YOUR_HETZNER2_PUBLIC_IP
+  unicast_peer {
+    YOUR_HETZNER1_PUBLIC_IP
+  }
+
+  track_script {
+    chk_app
+  }
+
+  notify_master "/etc/keepalived/promote.sh"
+}

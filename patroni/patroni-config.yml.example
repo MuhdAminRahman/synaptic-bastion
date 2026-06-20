@@ -1,0 +1,72 @@
+scope: synaptic-bastion
+namespace: /db/
+name: NODE_NAME_HERE   # unique per node — e.g. hetzner1, hetzner2, hetzner3
+
+restapi:
+  listen: NODE_TAILSCALE_IP:8008
+  connect_address: NODE_TAILSCALE_IP:8008
+
+etcd3:
+  hosts:
+    - NODE1_TAILSCALE_IP:2379
+    - NODE2_TAILSCALE_IP:2379
+    - NODE3_TAILSCALE_IP:2379
+
+bootstrap:
+  dcs:
+    ttl: 30
+    loop_wait: 10
+    retry_timeout: 10
+    maximum_lag_on_failover: 1048576
+    postgresql:
+      use_pg_rewind: true
+      use_slots: true
+      parameters:
+        wal_level: replica
+        hot_standby: "on"
+        max_wal_senders: 10
+        max_replication_slots: 10
+        wal_log_hints: "on"
+
+  initdb:
+    - encoding: UTF8
+    - data-checksums
+
+  pg_hba:
+    # IMPORTANT: every node needs this, not just the original master —
+    # leadership can move to any node, and whichever node becomes primary
+    # next must already accept replica connections from the others.
+    - host replication appuser 100.0.0.0/8 scram-sha-256
+    - host all appuser 100.0.0.0/8 scram-sha-256
+    - host all all 127.0.0.1/32 scram-sha-256
+
+  users:
+    appuser:
+      password: CHANGE_ME
+      options:
+        - replication
+
+postgresql:
+  listen: 127.0.0.1,NODE_TAILSCALE_IP:5432
+  connect_address: NODE_TAILSCALE_IP:5432
+  data_dir: /var/lib/postgresql/18/main
+  bin_dir: /usr/lib/postgresql/18/bin
+  pgpass: /tmp/pgpass0
+  authentication:
+    replication:
+      username: appuser
+      password: CHANGE_ME
+    superuser:
+      username: postgres
+      password: CHANGE_ME
+    rewind:
+      username: appuser
+      password: CHANGE_ME
+  parameters:
+    unix_socket_directories: '/var/run/postgresql'
+
+tags:
+  nofailover: false
+  noloadbalance: false
+  clonefrom: false
+  nosync: false

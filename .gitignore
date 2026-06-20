@@ -1,0 +1,32 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Proxy runtime state — generated/local, not source
+proxy/provision-jobs/
+proxy/*.log
+proxy/nodes.json
+proxy/outposts.json
+
+# SSH keys — never commit
+*.pem
+*.key
+id_rsa*
+ha_key*
+
+# Secrets
+.env
+*.token
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Compiled binaries
+app
+*.o

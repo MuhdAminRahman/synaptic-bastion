@@ -1,0 +1,126 @@
+<div class="page" id="page-replication">
+
+  <div class="two-col" style="gap:1px;margin-bottom:1px">
+
+    <!-- LEFT: Topology + Live Status -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">WAL STREAMING TOPOLOGY</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span class="badge badge-muted" id="repl-overall-badge">—</span>
+          <button class="btn btn-ghost btn-sm" onclick="checkRepl(this)">VERIFY</button>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <!-- Dynamic topology diagram -->
+        <div id="repl-topology" style="margin-bottom:14px">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--text3);padding:12px;text-align:center">
+            Connect to load topology
+          </div>
+        </div>
+
+        <!-- Live replica table -->
+        <div style="margin-bottom:12px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.15em;color:var(--text3);text-transform:uppercase;margin-bottom:6px">STREAMING REPLICAS</div>
+          <div id="repl-replica-table">
+            <div style="font-family:var(--mono);font-size:11px;color:var(--text3);padding:8px">No data — click VERIFY</div>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px">
+          <div style="background:var(--bg3);border:1px solid var(--border);padding:10px 12px">
+            <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px">REPLICATION LAG</div>
+            <div style="font-size:18px;font-weight:700;font-family:var(--mono)" id="repl-lag">—</div>
+            <div style="font-size:9px;color:var(--text3);margin-top:2px">target &lt;50ms</div>
+          </div>
+          <div style="background:var(--bg3);border:1px solid var(--border);padding:10px 12px">
+            <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px">RPO</div>
+            <div style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--amber)">0s</div>
+            <div style="font-size:9px;color:var(--text3);margin-top:2px">synchronous WAL</div>
+          </div>
+          <div style="background:var(--bg3);border:1px solid var(--border);padding:10px 12px">
+            <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px">REPLICAS ONLINE</div>
+            <div style="font-size:18px;font-weight:700;font-family:var(--mono)" id="repl-count">—</div>
+            <div style="font-size:9px;color:var(--text3);margin-top:2px" id="repl-lag-sub">of <span id="repl-total">—</span> configured</div>
+          </div>
+        </div>
+
+        <!-- Hidden compat IDs for test suite -->
+        <span style="display:none" id="repl-recovery"></span>
+        <span style="display:none" id="repl-slot-status"></span>
+        <span style="display:none" id="repl-arrow1"></span>
+        <span style="display:none" id="repl-arrow2"></span>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: Patroni + Chaos + Recovery -->
+    <div style="display:flex;flex-direction:column;gap:1px">
+
+    <!-- Patroni cluster panel -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">PATRONI CLUSTER</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span class="f-mono c-text3" style="font-size:9px" id="patroni-updated">—</span>
+          <button class="btn btn-ghost btn-sm" onclick="checkPatroni()">REFRESH</button>
+          <button class="btn btn-danger btn-sm" onclick="triggerFailover()">FORCE FAILOVER</button>
+        </div>
+      </div>
+      <div class="panel-body" id="patroni-panel-body">
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text3)">Click REFRESH to load Patroni status</div>
+      </div>
+    </div>
+
+    <!-- Failure injection -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">FAILURE INJECTION</div>
+        <button class="btn btn-ghost btn-sm" onclick="chaosRestoreAll()">FORCE RESTORE ALL</button>
+      </div>
+      <div class="panel-body">
+        <!-- App chaos -->
+        <div class="chaos-box" style="margin-bottom:8px">
+          <div class="chaos-title">⚠ APP KILL — SIGKILL ha-app process</div>
+          <div class="chaos-desc">Kills the C++ HTTP server. systemd auto-restarts within ~2s. Tests Nginx failover and service recovery. Does NOT affect PostgreSQL.</div>
+          <div class="chaos-btns" id="chaos-btn-list">
+            <span style="font-family:var(--mono);font-size:10px;color:var(--text3)">Connect to load nodes</span>
+          </div>
+        </div>
+
+        <!-- DB/Patroni chaos -->
+        <div class="chaos-box" style="margin-bottom:12px">
+          <div class="chaos-title">⚠ DB KILL — Stop Patroni on leader (triggers election)</div>
+          <div class="chaos-desc">Stops Patroni on the selected node. If it is the leader, Patroni elects a new primary within ~15s. A RESTORE button appears next to any unreachable node — click it to bring Patroni back and rejoin the cluster.</div>
+          <div class="chaos-btns" id="chaos-db-btn-list">
+            <span style="font-family:var(--mono);font-size:10px;color:var(--text3)">Connect to load nodes</span>
+          </div>
+        </div>
+
+        <div style="font-size:9px;font-weight:700;letter-spacing:.15em;color:var(--text3);text-transform:uppercase;margin-bottom:6px">RECOVERY LOG</div>
+        <div id="recovery-list">
+          <div class="empty-state">No chaos events yet.</div>
+        </div>
+      </div>
+    </div>
+
+    </div><!-- end right column flex -->
+
+  </div>
+
+  <!-- Manual commands — dynamic -->
+  <div class="panel">
+    <div class="panel-head" onclick="toggleReplCommands()" style="cursor:pointer;user-select:none">
+      <div class="panel-title">MANUAL SERVICE COMMANDS</div>
+      <span id="repl-cmd-toggle" style="font-family:var(--mono);font-size:11px;color:var(--text3);transition:transform .2s;display:inline-block">▼</span>
+    </div>
+    <div id="repl-cmd-body" style="display:none">
+      <div class="panel-body" id="repl-cmd-list">
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text3)">Connect to load commands</div>
+      </div>
+    </div>
+  </div>
+
+</div>

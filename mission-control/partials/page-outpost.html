@@ -1,0 +1,94 @@
+<div class="page" id="page-outpost">
+
+  <!-- Methodology explainer -->
+  <div class="panel" style="margin-bottom:1px">
+    <div class="panel-head" onclick="toggleOutpostInfo()" style="cursor:pointer;user-select:none">
+      <div class="panel-title">DOUBLE CHECK METHOD — FAILURE DETECTION</div>
+      <span id="outpost-info-toggle" style="font-family:var(--mono);font-size:11px;color:var(--text3);transition:transform .2s;display:inline-block">▼</span>
+    </div>
+    <div id="outpost-info-body">
+      <div class="panel-body">
+        <div style="font-size:11px;color:var(--text2);line-height:1.8;margin-bottom:12px">
+          Outpost monitors external websites with a two-stage verification pipeline before declaring a failure —
+          based on <strong style="color:var(--amber)">Naim, M.H. et al. (2025)</strong>,
+          <em>"Double Check Method: An Enhancement of Heartbeat Failure Detection by Fog Devices Through Socket and Port Engagement"</em> (SSRN 5099955).
+          This reduces false-positive failure detection compared to single-shot heartbeat monitoring.
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-bottom:1px">
+          <div class="guide-step">
+            <div class="guide-step-num">01</div>
+            <div class="guide-step-title">HEARTBEAT</div>
+            <div class="guide-step-body">Periodic HTTP request to the target URL. If it succeeds — healthy, no further action. If it fails, verification begins.</div>
+          </div>
+          <div class="guide-step">
+            <div class="guide-step-num">02</div>
+            <div class="guide-step-title">TIME CHECK</div>
+            <div class="guide-step-body">Wait a debounce window, then retry the heartbeat. If it recovers within the threshold — <strong style="color:var(--amber)">transient blip, false positive filtered</strong>. No alert raised.</div>
+          </div>
+          <div class="guide-step">
+            <div class="guide-step-num">03</div>
+            <div class="guide-step-title">QUORUM SOCKET CHECK</div>
+            <div class="guide-step-body">If still failing, every cluster node independently opens a raw TCP socket to host:port — not just one device.</div>
+          </div>
+        </div>
+
+        <div style="border:1px solid var(--blue);background:#1a2a3a30;padding:10px 14px;margin-bottom:0">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.15em;color:var(--blue);text-transform:uppercase;margin-bottom:6px">ENHANCEMENT — DISTRIBUTED QUORUM VERIFICATION</div>
+          <div style="font-size:10px;color:var(--text2);line-height:1.7">
+            The original method performs the socket check from a single fog device — leaving it vulnerable to a false DOWN
+            caused by that device's own localised network path, not the target. This implementation extends the method:
+            the socket check runs from <strong style="color:var(--text)">every cluster node in parallel</strong> (each acting as an
+            independent fog device), and a verdict requires quorum agreement.<br><br>
+            <strong style="color:var(--amber)">All nodes agree reachable</strong> → DEGRADED (confirmed app-layer issue, network fine everywhere) ·
+            <strong style="color:var(--red)">All nodes agree unreachable</strong> → DOWN (confirmed outage, high confidence) ·
+            <strong style="color:var(--blue)">Split result</strong> → ambiguous, debounce window doubles and the quorum re-checks once before a majority-vote decision is made.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add outpost -->
+  <div class="panel" style="margin-bottom:1px">
+    <div class="panel-head">
+      <div class="panel-title">ADD OUTPOST</div>
+      <span class="f-mono c-text3" style="font-size:10px" id="outpost-count">0 MONITORED</span>
+    </div>
+    <div class="panel-body">
+      <div class="form-row-4">
+        <div class="field"><label>Name</label><input id="op-name" type="text" placeholder="My Website" autocomplete="off"></div>
+        <div class="field" style="grid-column:span 2"><label>URL</label><input id="op-url" type="text" placeholder="https://example.com" autocomplete="off"></div>
+        <div class="field"><label>Port override <span class="c-text3">(optional)</span></label><input id="op-port" type="number" placeholder="auto"></div>
+      </div>
+      <div class="form-row-4" style="margin-top:8px">
+        <div class="field"><label>Check interval (sec)</label><input id="op-interval" type="number" value="15" min="5"></div>
+        <div style="grid-column:span 3;display:flex;align-items:flex-end">
+          <button class="btn btn-primary" onclick="addOutpost()">ADD OUTPOST</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Outpost grid -->
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">MONITORED TARGETS</div>
+      <button class="btn btn-ghost btn-sm" onclick="refreshOutposts()">REFRESH</button>
+    </div>
+    <div class="panel-body" style="padding:0">
+      <div id="outpost-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1px;padding:1px">
+        <div style="padding:20px;font-family:var(--mono);font-size:11px;color:var(--text3)">No outposts yet — add one above.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Verification log detail (shown when an outpost is selected) -->
+  <div class="panel" id="outpost-detail-panel" style="display:none;margin-top:1px">
+    <div class="panel-head">
+      <div class="panel-title">VERIFICATION LOG — <span id="outpost-detail-name" style="color:var(--amber)"></span></div>
+      <button class="btn btn-ghost btn-sm" onclick="closeOutpostDetail()">CLOSE</button>
+    </div>
+    <div class="panel-body" id="outpost-detail-body"></div>
+  </div>
+
+</div>

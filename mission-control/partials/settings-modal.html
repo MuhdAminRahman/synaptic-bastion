@@ -1,0 +1,56 @@
+<div class="settings-overlay" id="settings-overlay" onclick="if(event.target===this) closeSettings()">
+  <div class="settings-box">
+    <div class="settings-head">
+      <div class="settings-title">SETTINGS</div>
+      <button class="btn btn-ghost btn-sm" onclick="closeSettings()">CLOSE</button>
+    </div>
+    <div class="settings-body">
+
+      <div class="settings-section">
+        <div class="settings-section-label">COLOR THEME — GAME</div>
+        <div class="theme-grid">
+          <button class="theme-swatch" data-theme="bos" onclick="applyTheme('bos')">
+            <span class="swatch-dot" style="background:#c8a84b"></span>
+            <span class="swatch-name">Brotherhood of Steel</span>
+          </button>
+          <button class="theme-swatch" data-theme="stealth-ops" onclick="applyTheme('stealth-ops')">
+            <span class="swatch-dot" style="background:#33ff66"></span>
+            <span class="swatch-name">Stealth Ops</span>
+          </button>
+          <button class="theme-swatch" data-theme="unsc-tactical" onclick="applyTheme('unsc-tactical')">
+            <span class="swatch-dot" style="background:#6fd8ff"></span>
+            <span class="swatch-name">UNSC Tactical</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-label">COLOR THEME — REAL MILITARY</div>
+        <div class="theme-grid">
+          <button class="theme-swatch" data-theme="desert-storm" onclick="applyTheme('desert-storm')">
+            <span class="swatch-dot" style="background:#d4b48a"></span>
+            <span class="swatch-name">Desert Storm</span>
+          </button>
+          <button class="theme-swatch" data-theme="naval-command" onclick="applyTheme('naval-command')">
+            <span class="swatch-dot" style="background:#7aa8c8"></span>
+            <span class="swatch-name">Naval Command</span>
+          </button>
+          <button class="theme-swatch" data-theme="nato-digital" onclick="applyTheme('nato-digital')">
+            <span class="swatch-dot" style="background:#b8cc8a"></span>
+            <span class="swatch-name">NATO Digital</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-label">TEXT SIZE</div>
+        <div class="scale-grid">
+          <button class="scale-btn" data-scale="sm" onclick="applyScale('sm')">SMALL</button>
+          <button class="scale-btn" data-scale="md" onclick="applyScale('md')">NORMAL</button>
+          <button class="scale-btn" data-scale="lg" onclick="applyScale('lg')">LARGE</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

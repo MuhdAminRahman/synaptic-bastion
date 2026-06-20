@@ -1,0 +1,66 @@
+<aside class="sidebar" id="sidebar">
+
+  <div class="side-status-strip" id="side-status-strip">
+    <span class="blink" style="font-size:9px">■</span>
+    <span id="side-status-text">NO LINK</span>
+  </div>
+
+  <nav class="side-nav" role="tablist" aria-label="Main navigation">
+
+    <div class="side-group">
+      <div class="side-group-label"><span class="side-group-icon">▌</span>HQ</div>
+      <button class="side-item active" role="tab" aria-selected="true" aria-controls="page-monitor" onclick="showPage('monitor',this)" data-key="1">
+        <span class="side-item-label">Situation Room</span>
+        <span class="side-item-sub">live monitor</span>
+      </button>
+      <button class="side-item" role="tab" aria-selected="false" aria-controls="page-nodes" onclick="showPage('nodes',this)" data-key="3">
+        <span class="side-item-label">Garrison</span>
+        <span class="side-item-sub">node details</span>
+      </button>
+      <button class="side-item" role="tab" aria-selected="false" aria-controls="page-cluster" onclick="showPage('cluster',this)" data-key="6">
+        <span class="side-item-label">Enlistment</span>
+        <span class="side-item-sub">provision &amp; cluster</span>
+      </button>
+    </div>
+
+    <div class="side-group">
+      <div class="side-group-label"><span class="side-group-icon">▌</span>WAR ROOM</div>
+      <button class="side-item" role="tab" aria-selected="false" aria-controls="page-tests" onclick="showPage('tests',this)" data-key="2">
+        <span class="side-item-label">Drills</span>
+        <span class="side-item-sub">failure injection tests</span>
+      </button>
+      <button class="side-item" role="tab" aria-selected="false" aria-controls="page-loadtest" onclick="showPage('loadtest',this)" data-key="4">
+        <span class="side-item-label">Siege Trial</span>
+        <span class="side-item-sub">throughput &amp; stress test</span>
+      </button>
+    </div>
+
+    <div class="side-group">
+      <div class="side-group-label"><span class="side-group-icon">▌</span>SUPPLY LINE</div>
+      <button class="side-item" role="tab" aria-selected="false" aria-controls="page-replication" onclick="showPage('replication',this)" data-key="5">
+        <span class="side-item-label">Convoy Watch</span>
+        <span class="side-item-sub">DB replication &amp; Patroni</span>
+      </button>
+    </div>
+
+    <div class="side-group">
+      <div class="side-group-label"><span class="side-group-icon">▌</span>FRONTIER</div>
+      <button class="side-item" role="tab" aria-selected="false" aria-controls="page-outpost" onclick="showPage('outpost',this)" data-key="7">
+        <span class="side-item-label">Outpost</span>
+        <span class="side-item-sub">external monitoring</span>
+      </button>
+    </div>
+
+  </nav>
+  <button class="side-settings-btn" onclick="openSettings()">
+    <span>⚙</span><span>SETTINGS</span>
+  </button>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-footer-label">CREATOR</div>
+    <div class="sidebar-footer-name">Muhammad Amin bin Abd Rahman</div>
+    <div class="sidebar-footer-sub">FYP · UTeM BITS 2025/2026</div>
+  </div>
+</aside>
+
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>

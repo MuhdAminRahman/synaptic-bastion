@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Synaptic Bastion — HA Mission Control</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CiAgPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSIjMTExNDE4Ii8+CiAgPGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIHN0cm9rZT0iI2M4YTg0YiIgc3Ryb2tlLXdpZHRoPSIuNyIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iLjM1Ii8+CiAgPGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iNyIgc3Ryb2tlPSIjYzhhODRiIiBzdHJva2Utd2lkdGg9IjEuMiIgZmlsbD0ibm9uZSIvPgogIDxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjUiIHN0cm9rZT0iI2M4YTg0YiIgc3Ryb2tlLXdpZHRoPSIuNSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iLjUiLz4KICA8Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIyLjgiIGZpbGw9IiNjOGE4NGIiLz4KICA8cmVjdCB4PSIxMS4yIiB5PSIxIiB3aWR0aD0iMS42IiBoZWlnaHQ9IjMuNSIgZmlsbD0iI2M4YTg0YiIvPgogIDxyZWN0IHg9IjExLjIiIHk9IjE5LjUiIHdpZHRoPSIxLjYiIGhlaWdodD0iMy41IiBmaWxsPSIjYzhhODRiIi8+CiAgPHJlY3QgeD0iMSIgeT0iMTEuMiIgd2lkdGg9IjMuNSIgaGVpZ2h0PSIxLjYiIGZpbGw9IiNjOGE4NGIiLz4KICA8cmVjdCB4PSIxOS41IiB5PSIxMS4yIiB3aWR0aD0iMy41IiBoZWlnaHQ9IjEuNiIgZmlsbD0iI2M4YTg0YiIvPgogIDxyZWN0IHg9IjMuOCIgeT0iMy4yIiB3aWR0aD0iMS42IiBoZWlnaHQ9IjMiIGZpbGw9IiNjOGE4NGIiIHRyYW5zZm9ybT0icm90YXRlKDQ1IDQuNiA0LjcpIi8+CiAgPHJlY3QgeD0iMTkuMiIgeT0iMy4yIiB3aWR0aD0iMS42IiBoZWlnaHQ9IjMiIGZpbGw9IiNjOGE4NGIiIHRyYW5zZm9ybT0icm90YXRlKC00NSAyMCA0LjcpIi8+CiAgPHJlY3QgeD0iMy44IiB5PSIxNy44IiB3aWR0aD0iMS42IiBoZWlnaHQ9IjMiIGZpbGw9IiNjOGE4NGIiIHRyYW5zZm9ybT0icm90YXRlKC00NSA0LjYgMTkuMykiLz4KICA8cmVjdCB4PSIxOS4yIiB5PSIxNy44IiB3aWR0aD0iMS42IiBoZWlnaHQ9IjMiIGZpbGw9IiNjOGE4NGIiIHRyYW5zZm9ybT0icm90YXRlKDQ1IDIwIDE5LjMpIi8+Cjwvc3ZnPg==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+
+<!--#include file="partials/header.html" -->
+
+<div class="app-shell">
+
+<!--#include file="partials/sidebar.html" -->
+
+<!-- SETTINGS MODAL -->
+<!--#include file="partials/settings-modal.html" -->
+
+
+
+<main>
+
+<!-- FULLSCREEN CONNECT OVERLAY -->
+<!--#include file="partials/connect-screen.html" -->
+
+<!-- ══ MONITOR ══ -->
+<!--#include file="partials/page-monitor.html" -->
+
+<!-- ══ TESTS ══ -->
+<!--#include file="partials/page-tests.html" -->
+<!-- ══ LOAD TEST ══ -->
+<!--#include file="partials/page-loadtest.html" -->
+
+<!-- ══ REPLICATION ══ -->
+<!--#include file="partials/page-replication.html" -->
+
+
+<!-- ══ NODES ══ -->
+<!--#include file="partials/page-nodes.html" -->
+
+<!-- ══ CLUSTER ══ -->
+<!--#include file="partials/page-cluster.html" -->
+
+<!-- ══ OUTPOST ══ -->
+<!--#include file="partials/page-outpost.html" -->
+
+</main>
+
+</div><!-- /.app-shell -->
+<div class="toast-container" id="toasts"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="js/01-state-config.js"></script>
+<script src="js/02-nav-settings.js"></script>
+<script src="js/03-connect.js"></script>
+<script src="js/04-chaos-patroni.js"></script>
+<script src="js/05-polling-nodestate.js"></script>
+<script src="js/06-chart-log-toast-evidence.js"></script>
+<script src="js/07-probe-api.js"></script>
+<script src="js/08-tests.js"></script>
+<script src="js/09-loadtest-replication.js"></script>
+<script src="js/10-form-validation.js"></script>
+<script src="js/11-outpost.js"></script>
+<script src="js/12-cluster-provisioning.js"></script>
+<script src="js/13-export-metrics.js"></script>
+
+</body>
+</html>

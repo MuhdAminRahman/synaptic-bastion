@@ -1,0 +1,38 @@
+global_defs {
+  router_id hetzner1
+  script_user root
+  enable_script_security
+}
+
+vrrp_script chk_nginx {
+  script "/usr/bin/systemctl is-active nginx"
+  interval 2
+  weight -20
+}
+
+vrrp_instance VI_1 {
+  state MASTER
+  interface eth0
+  virtual_router_id 51
+  priority 110
+  advert_int 1
+
+  authentication {
+    auth_type PASS
+    auth_pass CHANGE_ME
+  }
+
+  unicast_src_ip YOUR_HETZNER1_PUBLIC_IP
+  unicast_peer {
+    YOUR_HETZNER2_PUBLIC_IP
+  }
+
+  track_script {
+    chk_nginx
+  }
+
+  notify_master "/etc/keepalived/reclaim.sh"
+  notify_backup "/etc/keepalived/failover.sh"
+  notify_fault  "/etc/keepalived/failover.sh"
+  notify_stop   "/etc/keepalived/failover.sh"
+}
